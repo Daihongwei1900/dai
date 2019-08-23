@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mode.dao.IAccountDao">
+<!--    开启缓存-->
+    <cache/>
+<!--    1对1映射-->
+    <resultMap id="accountUserMap"  type="account">
+        <id property="id" column="aid"/>
+        <result property="uid" column="uid"/>
+        <result property="money" column="money"/>
+        <association property="user" javaType="user" column="uid">
+<!--    延迟加载的方式        <association property="user" column="uid" select="com.mode.dao.IUserDao.findById" javaType="user"></association>-->
+            <id property="id" column="id"/>
+            <result property="username" column="username"/>
+            <result property="address" column="address"/>
+            <result property="sex" column="sex"/>
+            <result property="birthday" column="birthday"/>
+        </association>
+    </resultMap>
+
+    <select id="findAll" resultMap="accountUserMap">
+        select u.*,a.id as aid ,a.uid,a.money from account a,user u where u.id=a.uid;
+    </select>
+
+
+</mapper>

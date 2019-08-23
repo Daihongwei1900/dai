@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+<!--    开启注解扫描-->
+        <context:component-scan base-package="com.dai"/>
+<!--    配置视图解析器对象,配置前缀和后缀属性-->
+        <bean id="internalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+            <property name="prefix" value="/WEB-INF/pages/"/>
+            <property name="suffix" value=".jsp"/>
+        </bean>
+
+<!--    配置自定义类型转换器-->
+        <bean id="conversionService1" class="org.springframework.context.support.ConversionServiceFactoryBean">
+            <property name="converters">
+                <set>
+                    <bean class="com.dai.basic.utils.StringToDateConverter"/>
+                </set>
+            </property>
+        </bean>
+
+<!--    前端控制器，哪些静态资源不拦截-->
+    <mvc:resources location="/css/" mapping="/css/**"/>
+    <mvc:resources location="/images/" mapping="/images/**"/>
+    <mvc:resources location="/js/" mapping="/js/**"/>
+
+<!--    配置文件解析器对象-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="10485760"/>
+    </bean>
+
+<!--配置异常处理器-->
+<bean id="sysExceptionResolver" class="com.dai.exception.exception.SysExceptionResolver"/>
+
+<mvc:interceptors>
+    <mvc:interceptor>
+<!--        具体要拦截的方法-->
+        <mvc:mapping path="/inter/*"/>
+<!--        不要拦截的方法-->
+<!--        <mvc:exclude-mapping path=""/>-->
+<!--        配置拦截器对象-->
+        <bean class="com.dai.interceptor.interceptor.MyInterceptor1"/>
+    </mvc:interceptor>
+    <!--配置第二个拦截器-->
+    <mvc:interceptor>
+        <!--要拦截的具体的方法-->
+        <mvc:mapping path="/inter/**"/>
+        <!--不要拦截的方法
+        <mvc:exclude-mapping path=""/>
+        -->
+        <!--配置拦截器对象-->
+        <bean class="com.dai.interceptor.interceptor.MyInterceptor2" />
+    </mvc:interceptor>
+</mvc:interceptors>
+<!--    开启springmvc框架注解的支持-->
+    <mvc:annotation-driven conversion-service="conversionService1"/>
+</beans>

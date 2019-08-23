@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mode.dao.IUserDao">
+    <resultMap id="userAccountMap" type="user">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="address" column="address"/>
+        <result property="sex" column="sex"/>
+        <result property="birthday" column="birthday"/>
+        <collection property="accounts" ofType="account">
+<!--            <collection property="accounts"  ofType="account" select="com.mode.dao.IAccountDao.findByUid" column="id"></collection>-->
+            <id column="aid" property="id"/>
+            <result column="uid" property="uid"/>
+            <result column="money" property="money"/>
+        </collection>
+    </resultMap>
+
+    <select id="findAll" resultMap="userAccountMap">
+        select * from user u left outer join account a on u.id = a.uid;
+    </select>
+
+    <select id="findById" parameterType="int" resultType="user">
+        select * from  user where id=#{uid};
+    </select>
+
+    <select id="findByCondition" resultType="user" parameterType="queryvo">
+        select * from user
+       <where>
+            <if test="username!=null">
+                and  username like  #{username}
+            </if>
+            <if test="sex != null">
+                and sex=#{sex}
+            </if>
+       </where>
+    </select>
+
+    <select id="findByArray" resultType="user" parameterType="queryvo">
+        select * from user
+        <where>
+            <if test="ids!=null and ids.size()>0">
+                <foreach collection="ids" open="and id in (" close=")" item="id" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>

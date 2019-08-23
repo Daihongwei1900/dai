@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.designMybaties.dao.IAccountDao">
+
+    <!-- 定义封装account和user的resultMap -->
+    <resultMap id="accountUserMap" type="account">
+        <id property="id" column="aid"></id>
+        <result property="uid" column="uid"></result>
+        <result property="money" column="money"></result>
+        <!-- 一对一的关系映射：配置封装user的内容-->
+        <association property="user"  javaType="user">
+            <id property="id" column="id"></id>
+            <result column="username" property="username"></result>
+            <result column="address" property="address"></result>
+            <result column="sex" property="sex"></result>
+            <result column="birthday" property="birthday"></result>
+        </association>
+    </resultMap>
+
+    <!--查询所有账户同时包含用户名和地址信息  通过在acount中建立User属性来封装user，只能用于一对多，多对一的查询-->
+    <select id="findAll" resultMap="accountUserMap">
+        select u.*,a.id as aid,a.uid,a.money from account a , user u where u.id = a.uid;
+    </select>
+
+    <!-- 查询所有  新建了AccountUser来封装连接查询的内容的方式 -->
+    <select id="findAllAccount" resultType="accountuser">
+        select a.*,u.username,u.address from account a , user u where u.id = a.uid;
+    </select>
+
+
+
+<!--多表查询-->
+    <!--定义role表的ResultMap  role和user都相互在成员变量定义的对方的List<>结果-->
+<!--    public class Role implements Serializable {-->
+
+<!--    private Integer roleId;-->
+<!--    private String roleName;-->
+<!--    private String roleDesc;-->
+
+<!--    //多对多的关系映射：一个角色可以赋予多个用户-->
+<!--    private List<User> users;-->
+    <resultMap id="roleMap" type="role">
+        <id property="roleId" column="rid"></id>
+        <result property="roleName" column="role_name"></result>
+        <result property="roleDesc" column="role_desc"></result>
+        <collection property="users" ofType="user">
+            <id column="id" property="id"></id>
+            <result column="username" property="username"></result>
+            <result column="address" property="address"></result>
+            <result column="sex" property="sex"></result>
+            <result column="birthday" property="birthday"></result>
+        </collection>
+    </resultMap>
+
+    <!--查询所有-->
+    <select id="findAll" resultMap="roleMap">
+       select u.*,r.id as rid,r.role_name,r.role_desc from role r
+        left outer join user_role ur  on r.id = ur.rid
+        left outer join user u on u.id = ur.uid
+    </select>
+
+<!--    <mapper namespace="com.designMybatiesybaties.dao.IUserDao">-->
+
+        <!-- 定义User的resultMap-->
+        <resultMap id="userMap" type="user">
+            <id property="id" column="id"></id>
+            <result property="username" column="username"></result>
+            <result property="address" column="address"></result>
+            <result property="sex" column="sex"></result>
+            <result property="birthday" column="birthday"></result>
+            <!-- 配置角色集合的映射 -->
+            <collection property="roles" ofType="role">
+                <id property="roleId" column="rid"></id>
+                <result property="roleName" column="role_name"></result>
+                <result property="roleDesc" column="role_desc"></result>
+            </collection>
+        </resultMap>
+
+        <!-- 查询所有 sql语句换行要记得加空格键 -->
+        <select id="findAll" resultMap="userMap">
+        select u.*,r.id as rid,r.role_name,r.role_desc from user u
+         left outer join user_role ur  on u.id = ur.uid
+         left outer join role r on r.id = ur.rid
+    </select>
+
+        <!-- 根据id查询用户 -->
+        <select id="findById" parameterType="INT" resultType="user">
+        select * from user where id = #{uid}
+    </select>
+
+
+<!--    延迟加载配置       首先查询我们的主要信息，次要信息在我们getUser和getAccounts的时候才会去获取，一般一对多的时候才需要-->
+    <!-- 定义封装account和user的resultMap -->
+    <resultMap id="accountUserMap" type="account">
+        <id property="id" column="id"></id>
+        <result property="uid" column="uid"></result>
+        <result property="money" column="money"></result>
+        <!-- 一对一的关系映射：配置封装user的内容 ，查询所有账户，同时获取账户的所属用户名称以及他的地址信息
+        select属性指定的内容：查询用户的唯一标识：
+        column属性指定的内容：用户根据id查询时，所需要的参数的值
+        -->
+        <association property="user" column="uid" javaType="user" select="com.designMybaties.dao.IUserDao.findById"></association>
+    </resultMap>
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultMap="accountUserMap">
+        select * from account
+    </select>
+
+    <!-- 根据用户id查询账户列表 -->
+    <select id="findAccountByUid" resultType="account">
+        select * from account where uid = #{uid}
+    </select>
+
+    <!-- 定义User的resultMap-->
+    <resultMap id="userAccountMap" type="user">
+        <id property="id" column="id"></id>
+        <result property="username" column="username"></result>
+        <result property="address" column="address"></result>
+        <result property="sex" column="sex"></result>
+        <result property="birthday" column="birthday"></result>
+        <!-- 配置user对象中accounts集合的映射
+         一对多的关系映射-->
+        <collection property="accounts" ofType="account" select="com.designMybaties.dao.IAccountDao.findAccountByUid" column="id"></collection>
+    </resultMap>
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultMap="userAccountMap">
+        select * from user
+    </select>
+
+    <!-- 根据id查询用户 -->
+    <select id="findById" parameterType="INT" resultType="user">
+        select * from user where id = #{uid}
+    </select>
+
+</mapper>

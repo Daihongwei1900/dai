@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--告知spring在创建容器时要扫描的包，配置所需要的标签不是在beans的约束中，而是一个名称为
+    context名称空间和约束中-->
+    <context:component-scan base-package="com"></context:component-scan>
+<!--    扫描出需要的类到容器中，实现了下面配置的功能-->
+    <context:annotation-config/>
+<!--    他的作用是向 Spring 容器注册了以下4个BeanPostProcessor-->
+<!--    AutowiredAnnotationBeanPostProcessor、                        @Autowired    -->
+<!--    CommonAnnotationBeanPostProcessor、                         @ Resource 、@ PostConstruct、@ PreDestroy-->
+<!--    PersistenceAnnotationBeanPostProcessor 、                    @PersistenceContext-->
+<!--    RequiredAnnotationBeanPostProcessor、                         @Required-->
+
+
+</beans>
+
+<!--
+@Component("userService")
+    @Repository("userDao")  持久层             @Scope("prototype")作用范围
+    @Service("userService") 业务层             @PostConstruct  指定初始化方法
+    @Controller("userService") 表现层          @PreDestroy     指定销毁方法
+
+    @value 注入基本类型
+    @Autowired               自动注入
+    @Qualifier("userDao")    自动注入的基础上加beanID    等同于  @Resource(name="userDao")
+
+    @RunWith(SpringJUnit4ClassRunner.class) 让测试运行与Spring测试环境
+    @ContextConfiguration("classpath:applicationContextAop1.xml")  Spring整合Junit测试时，使用注解来引入多个配置文件
+    @ContextConfiguration(locations = { "classpath:spring1.xml", "classpath:spring2.xml" })
+
+    <bean id="studentDao" class="com.imooc.aop.demo3.StudentDaoImpl"/>
+
+<bean id="myBeforeAdvice" class="com.imooc.aop.demo3.MyBeforeAdvice"/>
+
+   方式1.     -Spring的AOP 产生代理对象
+    <bean id="studentDaoProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+        配置目标类
+    <property name="target" ref="studentDao"/>
+        实现的接口
+    <property name="proxyInterfaces" value="com.imooc.aop.demo3.StudentDao"/>
+        采用拦截的名称
+    <property name="interceptorNames" value="myBeforeAdvice"/>
+    <property name="optimize" value="true"></property>   //表示底层用CGLib实现
+    </bean>
+
+    方式2  环绕通知加切面
+        <bean id="myAroundAdvice" class="com.imooc.aop.demo4.MyAroundAdvice"/>
+                一般的切面是使用通知作为切面的，因为要对目标类的某个方法进行增强就需要配置一个带有切入点的切面
+        <bean id="myAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+                    pattern中配置正则表达式：.任意字符  *任意次数
+            <property name="pattern" value=".*save.*"/>
+            <property name="patterns" value=".*save.*,.*delete.*"/>
+             <property name="advice" ref="myAroundAdvice"/>
+         </bean>
+
+      配置产生代理
+            <bean id="customerDaoProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+            <property name="target" ref="customerDao"/>
+            <property name="proxyTargetClass" value="true"/>
+            <property name="interceptorNames" value="myAdvisor"/>  </bean>
+
+    方式3     自动代理方式
+            <bean id="myBeforeAdvice" class="com.imooc.aop.demo5.MyBeforeAdvice"/>
+            <bean id="myAroundAdvice" class="com.imooc.aop.demo5.MyAroundAdvice"/>
+               不带切面
+            <bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+                <property name="beanNames" value="*Dao"/>
+                <property name="interceptorNames" value="myBeforeAdvice"/>
+            </bean>
+                带切面
+            bean id="myAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+                <property name="pattern" value="com\.imooc\.aop\.demo6\.CustomerDao\.save"/>
+                <property name="advice" ref="myAroundAdvice"/>
+            </bean>
+AOP 常用方式    AspectJ方式
+             http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">  约束
+              <aop:aspectj-autoproxy/>      注解扫描
+               <bean id="productDao" class="com.imooc.aspectJ.demo1.ProductDao"/>
+               <bean class="com.imooc.aspectJ.demo1.MyAspectAnno"></bean>
+
+           2.XML方式
+        配置目标类=================-
+    <bean id="customerDao" class="com.imooc.aspectJ.demo2.CustomerDaoImpl"/>
+
+      配置切面类
+    <bean id="myAspectXml" class="com.imooc.aspectJ.demo2.MyAspectXml"/>
+        aop的相关配置
+        <aop:config>
+        配置切入点
+        <aop:pointcut id="pointcut1" expression="execution(* com.imooc.aspectJ.demo2.CustomerDao.save(..))"/>
+        <aop:pointcut id="pointcut2" expression="execution(* com.imooc.aspectJ.demo2.CustomerDao.update(..))"/>
+        <aop:pointcut id="pointcut3" expression="execution(* com.imooc.aspectJ.demo2.CustomerDao.delete(..))"/>
+        <aop:pointcut id="pointcut4" expression="execution(* com.imooc.aspectJ.demo2.CustomerDao.findOne(..))"/>
+        <aop:pointcut id="pointcut5" expression="execution(* com.imooc.aspectJ.demo2.CustomerDao.findAll(..))"/>
+        配置AOP的切面
+        <aop:aspect ref="myAspectXml">
+           配置前置通知
+            <aop:before method="before" pointcut-ref="pointcut1"/>
+            配置后置通知
+            <aop:after-returning method="afterReturing" pointcut-ref="pointcut2" returning="result"/>
+            配置环绕通知
+            <aop:around method="around" pointcut-ref="pointcut3"/>
+           配置异常抛出通知
+            <aop:after-throwing method="afterThrowing" pointcut-ref="pointcut4" throwing="e"/>
+             配置最终通知
+            <aop:after method="after" pointcut-ref="pointcut5"/>
+        </aop:aspect>
+    </aop:config>
+-->

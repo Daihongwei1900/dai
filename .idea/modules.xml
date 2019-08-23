@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Gitspace/SmallHRM/AdminCrudTest/AdminCrudTest.iml" filepath="$PROJECT_DIR$/../Gitspace/SmallHRM/AdminCrudTest/AdminCrudTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../mode/algorithm/algorithm.iml" filepath="$PROJECT_DIR$/../mode/algorithm/algorithm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../mode/java_basic/java_basic.iml" filepath="$PROJECT_DIR$/../mode/java_basic/java_basic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/maven_mybaties/maven_mybaties.iml" filepath="$PROJECT_DIR$/maven_mybaties/maven_mybaties.iml" />
+      <module fileurl="file://$PROJECT_DIR$/maven_spring/spring.iml" filepath="$PROJECT_DIR$/maven_spring/spring.iml" />
+      <module fileurl="file://$PROJECT_DIR$/total/total.iml" filepath="$PROJECT_DIR$/total/total.iml" />
+      <module fileurl="file://$PROJECT_DIR$/web/web.iml" filepath="$PROJECT_DIR$/web/web.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,143 @@
+mybatis���
+������
+��һ�죺mybatis����
+	mybatis�ĸ���
+	mybatis�Ļ����
+	mybatis���Ű���
+	�Զ���mybatis��ܣ���Ҫ��Ŀ����Ϊ���ô���˽�mybatis��ִ��ϸ�ڣ�
+�ڶ��죺mybatis����ʹ��
+	mybatis�ĵ���crud����
+	mybatis�Ĳ����ͷ���ֵ
+	mybatis��dao��д
+	mybatis���õ�ϸ��
+		������ǩ��ʹ��
+�����죺mybatis������Ͷ��
+	mybatis�����ӳ�
+	mybatis��������Ƽ���Ƶķ���
+	mybatis�Ķ���ѯ
+		һ�Զࣨ���һ��
+		��Զ�
+�����죺mybatis�Ļ����ע�⿪��
+	mybatis�еļ���ʱ������ѯ��ʱ����
+	mybatis�е�һ������Ͷ�������
+	mybatis��ע�⿪��
+		����CRUD
+		����ѯ
+-----------------------------------------------------------
+1��ʲô�ǿ�ܣ�
+	����������������е�һ�׽����������ͬ�Ŀ�ܽ�����ǲ�ͬ�����⡣
+	ʹ�ÿ�ܵĺô���
+		��ܷ�װ�˺ܶ��ϸ�ڣ�ʹ�����߿���ʹ�ü���ķ�ʽʵ�ֹ��ܡ������߿���Ч�ʡ�
+2������ܹ�
+	���ֲ㣺
+		������չʾ���ݵ�
+	ҵ��㣺
+		�Ǵ���ҵ������
+	�־ò㣺
+		�Ǻ����ݿ⽻����
+3���־ò㼼���������
+	JDBC������
+		Connection
+		PreparedStatement
+		ResultSet
+	Spring��JdbcTemplate��
+		Spring�ж�jdbc�ļ򵥷�װ
+	Apache��DBUtils��
+		����Spring��JdbcTemplate����Ҳ�Ƕ�Jdbc�ļ򵥷�װ
+
+	������Щ�����ǿ��
+		JDBC�ǹ淶
+		Spring��JdbcTemplate��Apache��DBUtils��ֻ�ǹ�����
+
+4��mybatis�ĸ���
+	mybatis��һ���־ò��ܣ���java��д�ġ�
+	����װ��jdbc�����ĺܶ�ϸ�ڣ�ʹ������ֻ��Ҫ��עsql��䱾���������עע���������������ӵȷ��ӹ���
+	��ʹ����ORM˼��ʵ���˽�����ķ�װ��
+
+	ORM��
+		Object Relational Mappging �����ϵӳ��
+		�򵥵�˵��
+			���ǰ����ݿ���ʵ���༰ʵ��������Զ�Ӧ����
+			�����ǿ��Բ���ʵ�����ʵ�ֲ������ݿ��
+
+			user			User
+			id			userId
+			user_name		userName
+	����������Ҫ����
+		ʵ�����е����Ժ����ݿ����ֶ����Ʊ���һ�¡�
+			user			User
+			id			id
+			user_name		user_name
+5��mybatis������
+	mybatis�Ļ����
+		��һ��������maven���̲���������
+		�ڶ���������ʵ�����dao�Ľӿ�
+		������������Mybatis���������ļ�
+				SqlMapConifg.xml
+		���Ĳ�������ӳ�������ļ�
+				IUserDao.xml
+	�������ע�����
+		��һ��������IUserDao.xml �� IUserDao.javaʱ������Ϊ�˺�����֮ǰ��֪ʶ����һ�¡�
+			��Mybatis�����ѳ־ò�Ĳ����ӿ����ƺ�ӳ���ļ�Ҳ������Mapper
+			���ԣ�IUserDao �� IUserMapper��һ����
+		�ڶ�������idea�д���Ŀ¼��ʱ�����Ͱ��ǲ�һ����
+			���ڴ���ʱ��com.designMybaties.dao���������ṹ
+			Ŀ¼�ڴ���ʱ��com.designMybaties.dao��һ��Ŀ¼
+		��������mybatis��ӳ�������ļ�λ�ñ����dao�ӿڵİ��ṹ��ͬ
+		���ĸ���ӳ�������ļ���mapper��ǩnamespace���Ե�ȡֵ������dao�ӿڵ�ȫ�޶�����
+		�������ӳ�������ļ��Ĳ������ã�select����id���Ե�ȡֵ������dao�ӿڵķ�����
+
+		����������˵������ģ����֮�������ڿ����о�������дdao��ʵ���ࡣ
+	mybatis�����Ű���
+		��һ������ȡ�����ļ�
+		�ڶ���������SqlSessionFactory����
+		������������SqlSession
+		���Ĳ�������Dao�ӿڵĴ������
+		���岽��ִ��dao�еķ���
+		���������ͷ���Դ
+
+		ע�����
+			��Ҫ������ӳ�������и�֪mybatisҪ��װ���ĸ�ʵ������
+			���õķ�ʽ��ָ��ʵ�����ȫ�޶�����
+		
+		mybatis����ע������Ű�����
+			��IUserDao.xml�Ƴ�����dao�ӿڵķ�����ʹ��@Selectע�⣬����ָ��SQL���
+			ͬʱ��Ҫ��SqlMapConfig.xml�е�mapper����ʱ��ʹ��class����ָ��dao�ӿڵ�ȫ�޶�������
+	��ȷ��
+		������ʵ�ʿ����У�����Խ���Խ�ã����Զ��ǲ��ò�дdaoʵ����ķ�ʽ��
+		����ʹ��XML����ע�����á�
+		����Mybatis����֧��дdaoʵ����ġ�
+
+6���Զ���Mybatis�ķ�����
+	mybatis��ʹ�ô���dao�ķ�ʽʵ����ɾ�Ĳ�ʱ��ʲô���أ�
+		ֻ�������£�
+			��һ�������������
+			�ڶ����ڴ�������е���selectList
+		
+	�Զ���mybatis��ͨ�����Ű���������
+		class Resources
+		class SqlSessionFactoryBuilder
+		interface SqlSessionFactory
+		interface SqlSession
+
+�ڶ���
+    1���ع�mybatis�Զ���ͻ����+�����Զ���Mybatis��ע�⿪��
+    2��Mybatis���ڴ���Dao��CRUD����					�ص�����
+    3��CRUD�п������������⣺�����Ĵ����Լ�����ֵ�ķ�װ
+    4������Mybatis���ڴ�ͳdao��ʽ��ʹ�ã��Լ���дdao��ʵ���ࣩ	�˽������
+    5��mybatis�������ļ��еĳ�������
+    	properties��ǩ
+    	typeAliases��ǩ				---����Integer��д��
+    	mappers��ǩ���ӱ�ǩ��package
+
+    -----------------------------------------
+    OGNL���ʽ��
+    	Object Graphic Navigation Language
+    	����	ͼ	����	   ����
+
+    	����ͨ�������ȡֵ��������ȡ���ݡ���д���ϰ�get��ʡ���ˡ�
+    	���磺���ǻ�ȡ�û�������
+    		���е�д����user.getUsername();
+    		OGNL���ʽд����user.username
+    	mybatis��Ϊʲô��ֱ��дusername,������user.�أ�
+    		��Ϊ��parameterType���Ѿ��ṩ�������������࣬���Դ�ʱ����Ҫд������
