@@ -118,7 +118,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>5.0.2.RELEASE</version>
+            <version>5.1.0.RELEASE</version>
         </dependency>
         <!-- Jackson Json处理工具包 -->
         <!--     目前这个版本可以 -->
